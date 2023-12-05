@@ -1,5 +1,5 @@
 
-# ajna the smart reader
+# Ajna the smart reader
 
 
 
