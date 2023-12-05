@@ -2,16 +2,19 @@ import pyttsx3
 import argparse
 import traceback
 import sys
+from PIL import Image
+import pytesseract
 
 # Initialize parser
 parser = argparse.ArgumentParser()
 
-# Adding optional argument
+# Adding optional arguments
 parser.add_argument("-t", "--text", help="string input")
 parser.add_argument("-a", "--accent", help="indian, australian, us & uk")
 parser.add_argument("-g", "--gender", help="male or female")
 parser.add_argument("-i", "--index", help="reader index, start from zero.")
 parser.add_argument("-o", "--output", help="output audio file name")
+parser.add_argument("-f", "--file", help="input image file")
 
 # Read arguments from command line
 args = parser.parse_args()
@@ -25,6 +28,14 @@ output_file = "output.mp3"
 # if text args passed in cli
 if args.text:
     text_to_read = args.text
+elif args.file:
+    # Read text from the image using Tesseract OCR
+    try:
+        image = Image.open(args.file)
+        text_to_read = pytesseract.image_to_string(image)
+    except Exception as e:
+        print(f"Error reading text from the image: {e}")
+        sys.exit(1)
 
 # if accent args passed in cli
 if args.accent:
@@ -64,6 +75,3 @@ except OSError as error:
 except Exception as error:
     traceback.print_exception(*sys.exc_info())
     print("Something went wrong; please report the issue at https://github.com/vishalnagda1/text-to-speech/issues")
-
-    
-python script_name.py -t "Hello, this is a test." -o output_audio.mp3
